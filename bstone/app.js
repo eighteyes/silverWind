@@ -3,11 +3,24 @@ Games = new Mongo.Collection("games");
 
 // AMGULAR
 if (Meteor.isClient) {
-  var app = angular.module('silverWind', ['angular-meteor']);
+  console.log('hi from meteor');
+  var app = angular.module('silverWind', ['angular-meteor','ui.router']);
 
-  app.controller('gameController', ['$scope', '$meteorObject', '$meteorCollection', 'GameService',
+  app.config(['$urlRouterProvider', '$stateProvider', '$locationProvider',
+  function($urlRouterProvider, $stateProvider, $locationProvider){
+    $locationProvider.html5Mode(true);
+
+    $stateProvider
+      .state('board', {
+        url: '/game',
+        templateUrl: 'wind.tpl',
+        controller: 'gameController'
+      });
+  }]);
+
+  app.controller('gameController', ['$scope', '$meteorCollection', 'GameService',
     'PlayerService',
-    function($scope, $meteorObject, $meteorCollection, GameService, PlayerService) {
+    function($scope, $meteorCollection, GameService, PlayerService) {
       var meteor = $meteorCollection;
 
       $scope.user = {
@@ -15,8 +28,7 @@ if (Meteor.isClient) {
       };
 
       $scope.games = $meteorCollection(Games)
-      $scope.game = $meteorObject(Games, $scope.games[0].id);
-
+      $scope.game = $scope.games[0];
       function initGame(){
         $scope.state = GameService.initGame($scope.game, $scope.user);
       }
@@ -37,6 +49,7 @@ if (Meteor.isClient) {
         console.log( 'Updated Game', $scope.state );
       }
       $scope.switchUser = function(user) {
+        console.log('switching', user);
         $scope.user = user;
         initGame();
         rebuildState();
