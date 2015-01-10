@@ -1,39 +1,56 @@
 Players = new Mongo.Collection("players");
 Games = new Mongo.Collection("games");
 
-/*
 // AMGULAR
 if (Meteor.isClient) {
-  var app = angular.module('silverWind', ['angular-meteor', 'ui-router']);
+  var app = angular.module('silverWind', ['angular-meteor']);
 
-  app.controller('gameController', ['$scope', '$meteorCollection', 'GameService',
+  app.controller('gameController', ['$scope', '$meteorObject', '$meteorCollection', 'GameService',
     'PlayerService',
-    function($scope, $meteorCollection, GameService, PlayerService) {
+    function($scope, $meteorObject, $meteorCollection, GameService, PlayerService) {
       var meteor = $meteorCollection;
 
-      $scope.game = GameService.getGame(1);
-      $scope.state = GameService.getGameState($scope.game);
-
       $scope.user = {
-        name: 'poopy'
+        name: 'default'
+      };
+
+      $scope.games = $meteorCollection(Games)
+      $scope.game = $meteorObject(Games, $scope.games[0].id);
+
+      function initGame(){
+        $scope.state = GameService.initGame($scope.game, $scope.user);
+      }
+      initGame();
+      rebuildState();
+
+      function rebuildState(){
+        $scope.state = GameService.buildGameState($scope.state);
       }
 
-      $scope.state = GameService;
+
+      console.log( 'GAME', $scope.state );
 
 
       $scope.addBid = function(index) {
-        GameService.addBid(index, $scope.user);
+        $scope.state = GameService.addBid($scope.state, index);
+        rebuildState();
+        console.log( 'Updated Game', $scope.state );
       }
       $scope.switchUser = function(user) {
         $scope.user = user;
-        $scope.state =
-          GameService.calculatePersonal(user);
+        initGame();
+        rebuildState();
       }
 
-      $scope.addUser = function(user) {
-        PlayerService.add(user);
-        $scope.user = user;
+      $scope.addUser = function() {
+        PlayerService.add($scope.newUser);
+        $scope.user = $scope.newUser;
+        $scope.newUser = {};
+        initGame();
+        rebuildState();
       }
+
+      $scope.newUser = {};
 
       $scope.players = PlayerService.players;
       $scope.userList = [_.clone($scope.user), {
@@ -48,7 +65,6 @@ if (Meteor.isClient) {
 
       var games = $meteorCollection(Games);
 
-
       return {
         add: function(p) {
           games.save(p);
@@ -56,31 +72,47 @@ if (Meteor.isClient) {
         getGame: function(id) {
           //return games[0];
         },
-        getGameState: function(game, user) {
-          //return calculateGame(game, user);
+        buildGameState: function(game) {
+          return calculateGame(game);
         },
+        initGame: initGame,
         addBid: addBid
       }
 
 
-      function calculateGame(game, user) {
-        var gameState = _.merge(game, {
-          total: [],
+      function initGame(game, user){
+        return _.merge(game, {
+          total: [0,0,0],
           //individual records
-          personal: [],
+          personal: [0,0,0],
           //individual percentage
           percentage: [],
           //individual gains
           gains: [],
           loserIndex: null,
-          winnerIndex: null
+          winnerIndex: null,
+          activeUser : user,
+          stake : 0,
+          pot : 0
         });
+      };
 
+      function calculateGame(game) {
+        var gameState = game;
+        var user = game.activeUser;
+
+        var bidFactor = 1;
         // bids
         gameState.total = _.reduce(gameState.bids, function(result, bid) {
+          gameState.pot += bidFactor;
           result[bid.index] += bidFactor;
+          if ( bid.user.name === user.name ){
+            gameState.stake += bidFactor;
+          }
           return result;
         }, [0, 0, 0])
+
+        console.log('total', gameState.total, 'pot', gameState.pot);
 
         var biggestValue = _.clone(gameState.total).sort(function(a, b) {
           //stupid fuckign javascript
@@ -118,11 +150,16 @@ if (Meteor.isClient) {
           }
           return result;
         }, [0, 0, 0]);
-        gameState.percentage = _.map(gameState.personal, function(stake, i) {
-          return Math.round(stake / gameState.total[i] * 100);
+
+        console.log('personal', gameState.personal)
+
+        gameState.percentage = _.map(gameState.personal, function(thisStake, i) {
+          return Math.round(thisStake / gameState.total[i] * 100);
         });
 
+        console.log('percentage', gameState.percentage)
 
+        // compute gains
         // find totals
         var totals = _.clone(gameState.total);
 
@@ -139,21 +176,23 @@ if (Meteor.isClient) {
           return (totalPot * (percent / 100)).toPrecision(2) || null;
         });
 
+        // attach user
+        gameState.activePlayer = user;
+
+        console.log('Built Game', gameState);
+
         return gameState;
 
       }
 
-      function addBid(game, user, index) {
-        console.log(' Bid on ', gameState.block[index].name, ' by ', user.name);
-        gameState.bids.push({
+      function addBid(game, index) {
+        console.log(' Bid on ', game.block[index].name, ' by ', game.activePlayer.name);
+        game.bids.push({
           index: index,
-          user: user,
+          user: game.activePlayer,
           time: new Date()
         });
-        calculateBids();
-        calculatePersonal(user);
-        console.log('p:', gameState)
-        return gameState;
+        return game;
       }
     }
   ]);
@@ -179,4 +218,3 @@ if (Meteor.isClient) {
 }
 // End client
 
-*/

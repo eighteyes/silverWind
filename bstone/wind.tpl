@@ -1,5 +1,5 @@
 <div ng-controller="gameController">
-  <div class="dashboard"> {{ user.name }}, your stake: {{ state.personal | total }} </div>
+  <div class="dashboard"> {{ user.name }}, your stake: {{ state.stake }} </div>
 
   <div class="board" ng-repeat="company in state.block">
 
@@ -17,7 +17,7 @@
   </div>
 
   <form class="addUser">
-    <input ng-model="user.name"><span><button ng-click="addUser(user)">+</button>
+    <input ng-model="newUser.name"><span><button ng-click="addUser()">+</button>
   </form>
 
   <div class="debug"> {{state}} </div>
