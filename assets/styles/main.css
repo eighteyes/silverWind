@@ -1,0 +1,31 @@
+body {
+  background-color: black;
+  color: grey;
+  font-size: 1em;
+}
+input {
+  font-size: 1em;
+}
+
+.bidBtn{
+  background-color:green;
+  color:white;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  float: left;
+  font-size:1.2rem;
+}
+
+.addUser {
+  font-size:1em;
+}
+
+.userlist div {
+  clear:both;
+  border-top: 1px solid grey;
+  width: 30%;
+}
+.userlist div:hover {
+  background-color: #333;
+}
