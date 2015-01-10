@@ -1,0 +1,61 @@
+body {
+  background-color: black;
+  color: grey;
+  font-size: 1em;
+}
+input {
+  font-size: 1em;
+}
+
+.board {
+width: 100%;
+margin:0 auto;
+}
+
+.bidBtn{ float:left;
+  margin: 10px 1.2em;
+  background-color:#333;
+  color:white;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  font-size:1.2rem;
+  -webkit-transition-duration: 1000ms;
+}
+.bitBtn p {
+  -webkit-transition-duration: 1000ms;
+}
+
+.debug { color: #999; }
+
+.playerList { border: 1px solid #339; position: absolute; right:0; top:100; margin: 1em;}
+.player { color: white; }
+
+.bidBtn.loser{
+  background-color:#600;
+}
+
+.bidBtn.winner{
+  background-color:#33C;
+}
+
+.dashboard {
+  clear:both;
+  color: grey;
+}
+.addUser {
+position:absolute;
+top:0;
+right:0;}
+.addUser input, .addUser button {
+  font-size:1em; background-color:#999;
+}
+
+.userlist div {
+  clear:both;
+  border-top: 1px solid grey;
+  width: 30%;
+}
+.userlist div:hover {
+  background-color: #333;
+}
