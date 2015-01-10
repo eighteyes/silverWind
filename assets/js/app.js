@@ -15,7 +15,7 @@ app.controller( 'gameController', function($scope, gameService){
   }
 
   $scope.addUser = function(){
-    $scope.userList.push( $scope.user );
+    $scope.userList.push( _.clone($scope.user) );
   }
 
   $scope.userList = [ _.clone($scope.user), { name: 'user'} ];
@@ -24,18 +24,20 @@ app.controller( 'gameController', function($scope, gameService){
 
 });
 
-app.filter('total', function(array){
-  return _.reduce(array, function(result, item){
-    return result + item;
-  })
+app.filter('total', function(){
+  return function(array){
+    return _.reduce(array, function(result, item){
+      return result + parseFloat(item);
+    }, 0);
+  }
 });
 
 var bidFactor = 1;
 
 app.factory('gameService', function(){
-  var company1 = { name: 'Poopy1' };
-  var company2 = { name: 'Poopy2' };
-  var company3 = { name: 'Poopy3' };
+  var company1 = { name: 'Microsoft' };
+  var company2 = { name: 'Apple' };
+  var company3 = { name: 'Comcast' };
 
   var gameState = {
     block: [ company1, company2, company3 ],
@@ -48,7 +50,9 @@ app.factory('gameService', function(){
     //individual percentage
     percentage : [],
     //individual gains
-    gains: []
+    gains: [],
+    loserIndex: null,
+    winnerIndex: null
   }
 
   return {
@@ -63,6 +67,34 @@ app.factory('gameService', function(){
         result[bid.index] += bidFactor;
         return result;
       }, [0,0,0] )
+
+     var biggestValue = _.clone(gameState.total).sort(function(a,b) {
+      //stupid fuckign javascript
+      return a>b
+    }).pop();
+
+     var smallestValue = _.clone(gameState.total).sort(function(a,b) {
+      //stupid fuckign javascript
+      return a<b
+    }).pop();
+
+     console.log('biggie', biggestValue, 'smalls', smallestValue);
+
+     if (  gameState.total.indexOf( biggestValue ) === gameState.total.lastIndexOf( biggestValue ) ){
+       // there can be only one
+       gameState.loserIndex = gameState.total.indexOf( biggestValue );
+       console.log('loser', gameState.loserIndex);
+     } else {
+      gameState.loserIndex = null;
+     }
+
+     if (  gameState.total.indexOf( smallestValue ) === gameState.total.lastIndexOf( smallestValue ) ){
+       // there can be only one
+       gameState.winnerIndex = gameState.total.indexOf( smallestValue );
+       console.log('winner', gameState.winnerIndex);
+     } else {
+      gameState.winnerIndex = null;
+     }
      return gameState.total;
   }
 
@@ -74,7 +106,6 @@ app.factory('gameService', function(){
       return result;
     }, [0,0,0]);
     gameState.percentage = _.map( gameState.personal, function( stake, i ){
-      console.log( gameState.total[i], stake)
       return Math.round(stake / gameState.total[i] * 100);
     });
     calculateGains(user);
@@ -93,8 +124,8 @@ app.factory('gameService', function(){
     });
 
     // figure out distribution via percentage
-    gameState.gains = _.map( gameState.percentage, function(percent, i){
-      return totalPot * ( percent / 100 );
+    gameState.gains = _.map( gameState.percentage, function(percent){
+      return (totalPot * ( percent / 100 )).toPrecision(2) || null;
     });
 
     console.log('gains', gameState.gains)

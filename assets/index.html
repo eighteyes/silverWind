@@ -9,18 +9,18 @@
 </head>
 <body ng-app="silverWind">
   <div ng-controller="gameController">
+  <div class="dashboard"> Your Stake: {{ state.personal | total }} </div>
     <div ng-repeat="company in state.block">
 
-      <button class="bidBtn" ng-click="addBid($index)">
+      <button class="bidBtn" ng-click="addBid($index)" ng-class="{ loser : (state.loserIndex == $index), winner: ( state.winnerIndex == $index ) }">
         <p class="name">{{ company.name }}</p>
         <p class="personal">{{ state.personal[$index] }}
-        <span class="gain">( + {{state.gains[$index]}} ) </span></p>
+        <span ng-show="(state.loserIndex == $index)" class="gain">( + {{ state.gains[$index] }} ) </span></p>
         <p class="percentage">{{ state.percentage[$index] + "%"}}</p>
         <p class="total"> {{ state.total[$index] }}</p>
       </button>
   </div>
 
-  <div> Your Stake: {{ state.personal | total }} </div>
 
   <form>
     <input ng-model="user.name"><span><button class="addUser" ng-click="addUser()">+</button>

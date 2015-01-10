@@ -8,15 +8,27 @@ input {
 }
 
 .bidBtn{
-  background-color:green;
+  background-color:#333;
   color:white;
   width: 200px;
   height: 200px;
   border-radius: 50%;
   float: left;
   font-size:1.2rem;
+  -webkit-transition-duration: 1000ms;
+}
+.bidBtn.loser{
+  background-color:#600;
 }
 
+.bidBtn.winner{
+  background-color:#33C;
+}
+
+.dashboard {
+  clear:both;
+  color: grey;
+}
 .addUser {
   font-size:1em;
 }
