@@ -16,6 +16,8 @@ if (Meteor.isClient) {
         templateUrl: 'wind.tpl',
         controller: 'gameController'
       });
+
+       $urlRouterProvider.otherwise("/game");
   }]);
 
   app.controller('gameController', ['$scope', '$meteorCollection', 'GameService',
@@ -29,16 +31,16 @@ if (Meteor.isClient) {
 
       $scope.disable = false;
 
-      // $scope.games = $meteorCollection(Games);
+      $scope.games = $meteorCollection(Games);
 
       $scope.game = {};
 
-      $scope.games = $meteorCollection(function() {
-        return Games.find({}, {
-          game: $scope.getReactivly('game') // Every time $scope.bids will change,
-            // the reactive function will re-run again
-        });
-      });
+      // $scope.games = $meteorCollection(function() {
+      //   return Games.find({}, {
+      //     game: $scope.getReactivly('game') // Every time $scope.bids will change,
+      //       // the reactive function will re-run again
+      //   });
+      // });
 
       $scope.random = Math.random()
 
@@ -80,15 +82,27 @@ if (Meteor.isClient) {
       rebuildState();
 
       function initGame(){
+        console.log('Init Called');
         $scope.game = $scope.games[0];
+        buildStateFromGame();
+      }
+
+      function buildStateFromGame(){
         $scope.state = GameService.initGame( $scope.game, $scope.user);
+        $scope.state = GameService.buildGameState($scope.state, $scope.user);
       }
 
 
       function rebuildState(){
         $scope.state = GameService.buildGameState($scope.state, $scope.user);
-        updateGame();
+        console.log('rebuild state', $scope.state)
       }
+
+      $scope.$watchCollection('game', function(){
+        console.log('game changed', $scope.game);
+        buildStateFromGame();
+        rebuildState();
+      })
 
       function updateGame(){
         $scope.game.bids = $scope.state.bids;
@@ -100,6 +114,7 @@ if (Meteor.isClient) {
       $scope.addBid = function(index) {
         $scope.state = GameService.addBid($scope.state, index);
         rebuildState();
+        updateGame();
       }
 
       $scope.switchUser = function(user) {
