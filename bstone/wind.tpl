@@ -1,17 +1,23 @@
-<div ng-hide="user.name">
+<div id="intro" ng-hide="isGame">
 Are you a Player or a Company?
 
 <h2>Player</h2>
-<input placeholder="handle" ng-model="user.name">
-<input placeholder="wallet" ng-model="user.wallet">
+<p>
+  <input placeholder="handle" ng-model="user.name">
+</p>
+<p>
+  <input placeholder="wallet" ng-model="user.wallet">
+</p>
 <button ng-click="addUser()">Join Game</button>
 
 </div>
 
-<div ng-show="user.name">
+<div ng-show="isGame">
   <div class="dashboard"> {{ user.name }}, your stake: {{ state.stake }} </div>
   <div class="countdown"> {{ game.timeLeft }} </div>
-
+  <div class="playerList">
+    <div class="player" ng-click="switchUser(player)" ng-repeat="player in players"> {{ player.name }} </div>
+  </div>
   <div class="board" >
 
 
@@ -30,20 +36,22 @@ Are you a Player or a Company?
       <p class="total"> {{ state.total[$index] }}</p>
     </button>
 
+    <div class="status">
+      {{ status }}
+    </div>
+
     <div class="results" ng-show="game.finished && state.gains[state.loserIndex] > 0"> Congrats. You spent {{ state.stake }}
     and earned {{ state.gains[state.loserIndex] }}! </div>
 
   </div>
 
-  <div class="playerList">
-  <div class="player" ng-click="switchUser(player)" ng-repeat="player in players"> {{ player.name }} </div>
-  </div>
+
 
   <form class="addUser">
     <div ng-show="login">
     <input ng-model="newUser.name"><span><button ng-click="addUser()">+</button></span>
     </div>
-    <div ng-show="admin">
+    <div class="admin" ng-show="admin">
     <button ng-click="resetGame()">Reset</button>
     <button ng-click="startGame()">Start</button>
     <button ng-click="endGame()">end</button>

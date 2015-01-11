@@ -55,6 +55,13 @@ margin:0 auto;
   margin: 10px 50px;
 }
 
+.status {
+  clear:both;
+  color: #99f;
+  font-size:2em;
+  margin: 10px 50px;
+}
+
 .bidBtn.done{
   opacity: 0;
   -webkit-transition-duration: 5000ms;
@@ -90,18 +97,22 @@ margin:0 auto;
   clear:both;
   color: grey;
 }
+.admin{
+  font-size:2em;
+}
+
+#intro button, #intro input {
+  font-size:3em;
+  background-color: #333;
+  border: 1px solid #779;
+  color: #EED;
+}
+
+
 .addUser {
 position:absolute;
 top:0;
 right:0;}
 .addUser input, .addUser button {
   font-size:1em; background-color:#999;
-}
-
-.userlist div {
-  border-top: 1px solid grey;
-  width: 30%;
-}
-.userlist div:hover {
-  background-color: #333;
 }
