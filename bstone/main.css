@@ -18,6 +18,7 @@ text-shadow: 10px 10px 10px rgba(255,255,255, 0.4);
 border-bottom: 1px solid white;
 }
 
+body>h1 span {margin-left: 2em; font-size: 0.6em; color: #CCC;}
 
 .countdown {
   font-family: 'Sonsie One', cursive;
@@ -32,8 +33,8 @@ margin:0 auto;
   margin: 10px 1.2em;
   background-color:#333;
   color:white;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   font-size:1.2rem;
   -webkit-transition-duration: 1000ms;
@@ -42,9 +43,34 @@ margin:0 auto;
   -webkit-transition-duration: 1000ms;
 }
 
-.bidBtn.stressed{
-  width:230px;
-  -webkit-transition-duration: 10000ms;
+.bidBtn .name {
+  width:200px;
+  margin:0 auto;
+}
+
+.results {
+  clear:both;
+  color: yellow;
+  font-size:3em;
+  margin: 10px 50px;
+}
+
+.bidBtn.done{
+  opacity: 0;
+  -webkit-transition-duration: 5000ms;
+}
+
+.bidBtn.disabled{
+  border-radius: 0;
+  background-color:transparent !important;
+  opacity:1 !important;
+}
+
+.bidBtn.hey {
+  width: 310px;
+  height: 310px;
+  -webkit-transition-duration: 500ms;
+
 }
 
 .debug { max-width:300px; font-size:0.9em; color: #999; }
@@ -73,7 +99,6 @@ right:0;}
 }
 
 .userlist div {
-  clear:both;
   border-top: 1px solid grey;
   width: 30%;
 }

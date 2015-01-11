@@ -2,7 +2,9 @@
   "name": "silverwind",
   "version": "0.0.1",
   "dependencies": {
-    "angular-ui-router": "0.2.13"
+    "angular-ui-router": "0.2.13",
+    "angular": ">= 1.0.8",
+    "Chart.js": "~1.0.1-beta.2"
   },
   "private": true
 }
