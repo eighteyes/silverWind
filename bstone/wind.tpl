@@ -1,9 +1,14 @@
 <div ng-controller="gameController">
   <div class="dashboard"> {{ user.name }}, your stake: {{ state.stake }} </div>
+  <div class="countdown"> {{ game.timeLeft }} </div>
 
   <div class="board" ng-repeat="company in state.block">
 
-    <button class="bidBtn" ng-click="addBid($index)" ng-class="{ loser : (state.loserIndex == $index), winner: ( state.winnerIndex == $index ) }">
+    <button class="bidBtn" ng-click="addBid($index)" ng-class="{
+    loser : (state.loserIndex == $index),
+    winner: ( state.winnerIndex == $index ),
+    bounce: ( game.timeLeft == ( 50 ))
+    }">
       <p class="name">{{ company.name }}</p>
       <p class="personal">{{ state.personal[$index] }}
       <span ng-show="(state.loserIndex == $index)" class="gain">( + {{ state.gains[$index] }} ) </span></p>
@@ -18,7 +23,8 @@
 
   <form class="addUser">
     <input ng-model="newUser.name"><span><button ng-click="addUser()">+</button>
+    <button ng-click="resetGame()">Reset</button>
+    <button ng-click="startGame()">Start</button>
+    <button ng-click="endGame()">end</button>
   </form>
-
-  <div class="debug"> {{state}} </div>
 </div>
