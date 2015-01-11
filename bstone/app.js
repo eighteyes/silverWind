@@ -74,6 +74,8 @@ if (Meteor.isClient) {
 
       $scope.resetGame = function(){
 
+        $scope.game.started = false;
+        $scope.game.finished = false;
         // PlayerService.players.remove();
 
         $scope.games.remove();
@@ -91,14 +93,21 @@ if (Meteor.isClient) {
         rebuildState();
       }
 
+      $scope.status = "";
 
       $scope.$watch('game.timeLeft', function(){
         if ( $scope.game.timeLeft <= 15 && $scope.game.started == true ){
           $scope.status = "A game has begun!"
-        } else if ( $scope.game.timeLeft <=10 ) {
+        }
+        if ( $scope.game.timeLeft <=10 ) {
           $scope.status = "Quickly now!"
-        } else if ( $scope.game.timeLeft <=5 ) {
+        }
+        if ( $scope.game.timeLeft <=5 ) {
           $scope.status = "You're running out of time!"
+        }
+
+        if ( $scope.game.finished == true ){
+          $scope.status = "";
         }
       });
 
@@ -295,7 +304,7 @@ if (Meteor.isClient) {
         // attach user
         gameState.activePlayer = user;
 
-        // console.log('Built Game', gameState);
+        console.log('Built Game State', gameState);
 
         return gameState;
 

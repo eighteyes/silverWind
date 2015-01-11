@@ -13,7 +13,7 @@ Are you a Player or a Company?
 </div>
 
 <div ng-show="isGame">
-  <div class="dashboard"> {{ user.name }}, your stake: {{ state.stake }} </div>
+  <div class="dashboard"> {{ user.name }}, your stake: {{ state.stake }}, total : {{ game.bids.length }} </div>
   <div class="countdown"> {{ game.timeLeft }} </div>
   <div class="playerList">
     <div class="player" ng-click="switchUser(player)" ng-repeat="player in players"> {{ player.name }} </div>
@@ -40,8 +40,12 @@ Are you a Player or a Company?
       {{ status }}
     </div>
 
-    <div class="results" ng-show="game.finished && state.gains[state.loserIndex] > 0"> Congrats. You spent {{ state.stake }}
-    and earned {{ state.gains[state.loserIndex] }}! </div>
+    <div class="results" ng-show="game.finished && state.gains[state.loserIndex] > 0"> <p>Congrats. You spent {{ state.stake }}
+      and earned {{ state.gains[state.loserIndex] }}! </p>
+
+      <p>The winner was {{ game.block[ state.winnerIndex ].name}} who wants you to know that {{ game.block[ state.winnerIndex ].info }}  and took in {{ state.total[ state.winnerIndex ]}}
+
+    </div>
 
   </div>
 
